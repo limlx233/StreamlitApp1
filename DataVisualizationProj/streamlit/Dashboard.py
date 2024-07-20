@@ -15,8 +15,8 @@ def load_html():
         raw_html = base64.b64encode(raw_html).decode()
     return raw_html
 
-st.title('Dashboard')
-st.header('Just a test!', divider="rainbow")
+st.title('数据看板示例(待开发)')
+st.header('下列为简单图示!', divider="rainbow")
 
 raw_html = load_html()
 with st.container(border=True):
