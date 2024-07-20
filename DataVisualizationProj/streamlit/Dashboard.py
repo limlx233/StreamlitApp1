@@ -20,5 +20,4 @@ st.header('Just a test!', divider="rainbow")
 
 raw_html = load_html()
 with st.container(border=True):
-    with st.spinner('加载中...'):
-        components.iframe(f"data:text/html;base64,{raw_html}", height=1400, width=900)
+    components.iframe(f"data:text/html;base64,{raw_html}", height=1400, width=900)
