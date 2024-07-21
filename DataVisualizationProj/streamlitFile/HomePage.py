@@ -2,6 +2,7 @@ import streamlit as st
 
 
 st.title('主页')
+st.write('欢迎你使用游客身份登录！')
 st.header('数据应用说明', divider="rainbow")
 st.write('下列为数据应用的主要功能，待开发完善')
 with st.container(border=True):
