@@ -1,54 +1,36 @@
-import streamlit as st 
-from streamlitFile.login_logout import login_page
-
-# 函数：重新设置页面配置
-def reset_page_config(wide_mode):
-    if wide_mode:
-        st.set_page_config(layout='wide', initial_sidebar_state='expanded')
-    else:
-        st.set_page_config(layout='centered', initial_sidebar_state='collapsed')
-
-# 函数：显示登录页面
-def display_login_page():
-    reset_page_config(wide_mode=False)
-    login_page()
-
-# 函数：显示导航页面
-def display_navigation_page():
-    reset_page_config(wide_mode=True)
-    pg = st.navigation({
-        "主页": [homepage, dashboard, dataexplore, logout],
-    })
-    pg.run()
-    
-def logout_fuc():
-    # 清除会话状态
-    st.session_state.logged_in = False
-    st.session_state.username = None
-    
-    # 更新查询参数
-    st.experimental_set_query_params(logged_in="false")  # 这行需要被修改
-
-    # 显示登录页面
-    display_login_page()
+import streamlit as st
+from db import SessionLocal, UserInfo
 
 # 页面定义
 homepage = st.Page("streamlitFile/HomePage.py", title="主页", icon=":material/home:")
 dashboard = st.Page("streamlitFile/Dashboard.py", title="数据看板", icon=":material/dashboard:")
 dataexplore = st.Page("streamlitFile/DataExplore.py", title="数据处理", icon=":material/explore:")
-login = st.Page(login_page, title="登录", icon=":material/login:")
-logout = st.Page(logout_fuc, title="退出", icon=":material/logout:")
+logout = st.Page("streamlitFile/logout.py", title="退出", icon=":material/logout:")
 
-# 读取查询参数
-query_params = st.query_params
-logged_in_str = query_params.get("logged_in", "false")
-st.session_state.logged_in = (logged_in_str == "true")
+# 登录状态检查
+if "user" not in st.session_state:
+    st.write("请登录")
+    username = st.text_input("用户名")
+    password = st.text_input("密码", type="password")
 
-if 'username' not in st.session_state:
-    st.session_state.username = None
+    if st.button("登录"):
+        db = SessionLocal()
+        user = db.query(UserInfo).filter(UserInfo.usrname == username, UserInfo.usrpwd == password).first()
 
-# 页面选择逻辑
-if st.session_state.logged_in:
-    display_navigation_page()
+        if user:
+            st.session_state.user = username
+            st.success("登录成功！")
+            st.rerun()  # 重新运行应用以更新页面
+
+        else:
+            st.error("登录失败，请重试。")
+
+# 已登录页面
 else:
-    display_login_page()
+    st.write(f"欢迎回来，{st.session_state.user}")
+    pg = st.navigation({
+        "主界面": [homepage, dashboard, dataexplore],
+        # "退出登录": [logout]
+    })
+    pg.run()
+
