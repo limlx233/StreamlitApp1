@@ -5,8 +5,8 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 # 定义数据库路径和连接 URL
-db_path =  st.secrets["database"]["db_path"]
-# db_path = "./user_data.db"
+# db_path =  st.secrets["database"]["db_path"]
+db_path = "./user_data.db"
 
 # 检查数据库文件路径是否存在，如果不存在则创建
 # if not os.path.exists(os.path.dirname(db_path)):
